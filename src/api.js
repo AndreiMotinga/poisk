@@ -20,6 +20,7 @@ import history from "config/history";
 class Api {
   constructor() {
     this.key = process.env.REACT_APP_LOCAL_STORAGE_KEY;
+    this.api_url = process.env.REACT_APP_API_URL;
   }
 
   /**
@@ -66,7 +67,7 @@ class Api {
       }
 
       return axios
-        .get("/api/auth/validate_token", { headers })
+        .get(`${this.api_url}/auth/validate_token`, { headers })
         .then(res => {
           this.cycleHeaders(res.headers);
           const currentUser = res.data.data;
@@ -90,7 +91,7 @@ class Api {
     return dispatch => {
       dispatch(signupRequest());
       return axios
-        .post("/api/auth", {
+        .post(`${this.api_url}/auth`, {
           email,
           password,
           password_confirmation: password
@@ -117,7 +118,7 @@ class Api {
     return dispatch => {
       dispatch(signinRequest());
       return axios
-        .post("/api/auth/sign_in", {
+        .post(`${this.api_url}/auth/sign_in`, {
           email,
           password
         })
@@ -143,7 +144,7 @@ class Api {
     return dispatch => {
       dispatch(signoutRequest());
       return axios
-        .delete("/api/auth/sign_out", { headers: this.headers })
+        .delete(`${this.api_url}/auth/sign_out`, { headers: this.headers })
         .then(res => {
           this.cycleHeaders(res.headers);
           dispatch(signoutSuccess());
@@ -157,25 +158,25 @@ class Api {
 
   getUserListings() {
     return axios
-      .get("/api/users/listings", { headers: this.headers })
+      .get(`${this.api_url}/users/listings`, { headers: this.headers })
       .then(res => res.data.data);
   }
 
   getListings(params) {
-    return axios.get("/api/listings", { params }).then(res => res.data);
+    return axios.get(`${this.api_url}/listings`, { params }).then(res => res.data);
   }
 
   editListing(id) {
-    return axios.get(`/api/listings/${id}/edit`, { headers: this.headers });
+    return axios.get(`${this.api_url}/listings/${id}/edit`, { headers: this.headers });
   }
 
   getListing(id) {
-    return axios.get(`/api/listings/${id}`);
+    return axios.get(`${this.api_url}/listings/${id}`);
   }
 
   saveListing(listing) {
     return axios.put(
-      `/api/listings/${listing.id}`,
+      `${this.api_url}/listings/${listing.id}`,
       { listing },
       { headers: this.headers }
     );
@@ -183,11 +184,11 @@ class Api {
 
   removeListing(id) {
     const headers = this.headers;
-    return axios.delete(`/api/listings/${id}`, { headers });
+    return axios.delete(`${this.api_url}/listings/${id}`, { headers });
   }
 
   getStates() {
-    return axios.get(`/api/states/`).then(res => res.data);
+    return axios.get(`${this.api_url}/states/`).then(res => res.data);
   }
 
   getCities(state, all_states = false) {
@@ -198,22 +199,22 @@ class Api {
     if (all_states) {
       params.all = 1;
     }
-    return axios.get("/api/cities", { params }).then(res => res.data);
+    return axios.get(`${this.api_url}/cities`, { params }).then(res => res.data);
   }
 
   savePicture(picture) {
     const headers = this.headers;
-    return axios.post(`/api/pictures`, picture, { headers });
+    return axios.post(`${this.api_url}/pictures`, picture, { headers });
   }
 
   removePicture(id) {
     const headers = this.headers;
-    return axios.delete(`/api/pictures/${id}`, { headers });
+    return axios.delete(`${this.api_url}/pictures/${id}`, { headers });
   }
 
   saveUser(user) {
     const headers = this.headers;
-    return axios.put(`/api/users/${user.id}`, { user }, { headers });
+    return axios.put(`${this.api_url}/users/${user.id}`, { user }, { headers });
   }
 }
 
